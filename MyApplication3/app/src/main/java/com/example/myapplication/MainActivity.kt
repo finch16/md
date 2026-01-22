@@ -274,7 +274,61 @@ fun DetailedDrawerExample() {
                 modifier = Modifier.padding(innerPadding)
                     .verticalScroll(scrollState)
             ) {
-                (1..160).forEach { index ->
+                Text(
+                    text = "Назва файлу",
+                    modifier = Modifier.onPlaced{coordinates ->
+                        textPositions[1] = coordinates.positionInParent().y.toInt()
+                    }
+                )
+                Text(
+                    text = "Заголовок 1",
+                    modifier = Modifier.onPlaced{coordinates ->
+                        textPositions[2] = coordinates.positionInParent().y.toInt()
+                    }
+                )
+                Text(
+                    text = "Розділ 1\n/*купа тексту*/",
+                    modifier = Modifier.onPlaced{coordinates ->
+                        textPositions[3] = coordinates.positionInParent().y.toInt()
+                    }
+                )
+                Text(
+                    text = "Заголовок 2",
+                    modifier = Modifier.onPlaced{coordinates ->
+                        textPositions[4] = coordinates.positionInParent().y.toInt()
+                    }
+                )
+                Text(
+                    text = "Розділ 2\n/*купа тексту*/",
+                    modifier = Modifier.onPlaced{coordinates ->
+                        textPositions[5] = coordinates.positionInParent().y.toInt()
+                    }
+                )
+                Text(
+                    text = "Заголовок 3",
+                    modifier = Modifier.onPlaced{coordinates ->
+                        textPositions[6] = coordinates.positionInParent().y.toInt()
+                    }
+                )
+                Text(
+                    text = "Розділ 3\n/*купа тексту*/",
+                    modifier = Modifier.onPlaced{coordinates ->
+                        textPositions[7] = coordinates.positionInParent().y.toInt()
+                    }
+                )
+                Text(
+                    text = "Заголовок 4",
+                    modifier = Modifier.onPlaced{coordinates ->
+                        textPositions[8] = coordinates.positionInParent().y.toInt()
+                    }
+                )
+                Text(
+                    text = "Розділ 4\n/*купа тексту*/",
+                    modifier = Modifier.onPlaced{coordinates ->
+                        textPositions[9] = coordinates.positionInParent().y.toInt()
+                    }
+                )
+                (10..160).forEach { index ->
                     Text(
                         text = "Контент 2 вашего экрана ${index.toString().padStart(2, '0')}",
                         modifier = Modifier.onPlaced{coordinates ->
