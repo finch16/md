@@ -13,6 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -37,7 +38,11 @@ import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.launch
+import androidx.lifecycle.lifecycleScope
 import com.example.myapplication.ui.theme.MyApplicationTheme
+
+import com.example.myapplication.database.AppDatabase
+import com.example.myapplication.entity.User
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,6 +51,22 @@ class MainActivity : ComponentActivity() {
         setContent {
             MyApplicationTheme {
                 DetailedDrawerExample()
+            }
+        }
+        val db = AppDatabase.getDatabase(this)
+        val userDao = db.userDao()
+        lifecycleScope.launch {
+            val newUser1 = User(name = "Max", photo = "")
+            val newUser2 = User(name = "Ivan", photo = "")
+            val u1Id = userDao.insert(newUser1)
+            val u2Id = userDao.insert(newUser2)
+
+            userDao.update(User(id = u1Id, name = "Max", photo = "photo/${u1Id}"))
+            userDao.update(User(id = u2Id, name = "Ivan", photo = "photo/${u2Id}"))
+
+            val allUsers = userDao.getAllUsers()
+            for (user in allUsers) {
+                println("Пользователь: ${user.name}")
             }
         }
     }
@@ -92,7 +113,8 @@ fun DetailedDrawerExample() {
         drawerContent = {
             ModalDrawerSheet {
                 Column(
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
                         .verticalScroll(rememberScrollState())
                 ) {
                     Spacer(Modifier.height(12.dp))
@@ -205,73 +227,9 @@ fun DetailedDrawerExample() {
                 )
             }
         ) { innerPadding ->
-            /*Text(
-                text =
-"""Контент вашего экрана 01
-Контент вашего экрана 02
-Контент вашего экрана 03
-Контент вашего экрана 04
-Контент вашего экрана 05
-Контент вашего экрана 06
-Контент вашего экрана 07
-Контент вашего экрана 08
-Контент вашего экрана 09
-Контент вашего экрана 10
-Контент вашего экрана 11
-Контент вашего экрана 12
-Контент вашего экрана 13
-Контент вашего экрана 14
-Контент вашего экрана 15
-Контент вашего экрана 16
-Контент вашего экрана 17
-Контент вашего экрана 18
-Контент вашего экрана 19
-Контент вашего экрана 20
-Контент вашего экрана 21
-Контент вашего экрана 22
-Контент вашего экрана 23
-Контент вашего экрана 24
-Контент вашего экрана 25
-Контент вашего экрана 26
-Контент вашего экрана 27
-Контент вашего экрана 28
-Контент вашего экрана 29
-Контент вашего экрана 30
-Контент вашего экрана 31
-Контент вашего экрана 32
-Контент вашего экрана 33
-Контент вашего экрана 34
-Контент вашего экрана 35
-Контент вашего экрана 36
-Контент вашего экрана 37
-Контент вашего экрана 38
-Контент вашего экрана 39
-Контент вашего экрана 40
-Контент вашего экрана 41
-Контент вашего экрана 42
-Контент вашего экрана 43
-Контент вашего экрана 44
-Контент вашего экрана 45
-Контент вашего экрана 46
-Контент вашего экрана 47
-Контент вашего экрана 48
-Контент вашего экрана 49
-Контент вашего экрана 50
-Контент вашего экрана 51
-Контент вашего экрана 52
-Контент вашего экрана 53
-Контент вашего экрана 54
-Контент вашего экрана 55
-Контент вашего экрана 56
-Контент вашего экрана 57
-Контент вашего экрана 58
-Контент вашего экрана 59
-Контент вашего экрана 60""".trimMargin(),
-                modifier = Modifier.padding(innerPadding)
-                    .verticalScroll(scrollState)
-            )*/
             Column(
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier
+                    .padding(innerPadding)
                     .verticalScroll(scrollState)
             ) {
                 Text(
@@ -346,5 +304,67 @@ fun DetailedDrawerExample() {
 fun DetailedDrawerExamplePreview() {
     MyApplicationTheme {
         DetailedDrawerExample()
+    }
+}
+
+@Composable
+fun Card(
+    progress: Int,
+    title: @Composable () -> Unit
+) {
+    Column {
+        title()
+        Text(text = progress.toString())
+    }
+}
+
+@Composable
+fun Cards(
+    loads: @Composable () -> Unit,
+    notLoads: @Composable () -> Unit
+) {
+    Column {
+        Text(text = "Курси")
+        Column {
+            loads()
+        }
+        Text(text = "Інші курси")
+        Column {
+            notLoads()
+        }
+    }
+}
+
+@Composable
+fun CardsNotLoad(
+    title: @Composable () -> Unit
+) {
+    Column {
+        title()
+        Button(onClick = {}) {
+            Text(text = "Завантажити")
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun Screen2Preview() {
+    MyApplicationTheme {
+        Scaffold(modifier = Modifier.fillMaxSize()) {innerPadding ->
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                Cards({
+                    Card(10) { Text(text = "/*назва курсу 1*/") }
+                    Card(17) { Text(text = "/*назва курсу 2*/") }
+                }) {
+                    CardsNotLoad { Text(text = "/*назва курсу 3*/") }
+                    CardsNotLoad { Text(text = "/*назва курсу 4*/") }
+                }
+            }
+        }
     }
 }
